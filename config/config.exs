@@ -23,7 +23,7 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :app, :open_weather_map,
+config :app, WeatherApp.OpenWeatherMap,
   api_key: System.get_env("OPEN_WEATHER_MAP_API_KEY"),
   base_url: "https://api.openweathermap.org/data/2.5/"
 
