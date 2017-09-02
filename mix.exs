@@ -20,7 +20,7 @@ defmodule WeatherApp.Mixfile do
   def application do
     [
       mod: {WeatherApp.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :httpotion]
     ]
   end
 
@@ -40,7 +40,10 @@ defmodule WeatherApp.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:httpotion, "~> 3.0.3"},
+      {:jsx, "~> 2.8.2"},
+      {:bypass, "~> 0.8", only: :test}
     ]
   end
 

@@ -23,6 +23,10 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :app, :open_weather_map,
+  api_key: System.get_env("OPEN_WEATHER_MAP_API_KEY"),
+  base_url: "https://api.openweathermap.org/data/2.5/"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
