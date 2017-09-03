@@ -29,4 +29,10 @@ defmodule WeatherApp.OpenWeatherMap do
   defp parse_response(%{body: body, status_code: 200}) do
     {:ok, :jsx.decode(body, [:return_maps])}
   end
+
+  defp parse_response(%{body: body, status_code: 404}) do
+    parsed_body = :jsx.decode(body, [:return_maps])
+
+    {:error, Map.get(parsed_body, "message")}
+  end
 end

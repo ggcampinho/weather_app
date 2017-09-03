@@ -1,4 +1,4 @@
-defmodule WeatherAppWeb.PageControllerTest do
+defmodule WeatherAppWeb.WeatherControllerTest do
   use WeatherAppWeb.ConnCase, async: true, bypass: true
 
   @tag :bypass
@@ -52,5 +52,24 @@ defmodule WeatherAppWeb.PageControllerTest do
 
     conn = get conn, "/search", %{q: "Berlin"}
     assert html_response(conn, 200) =~ "25\.5˚C"
+  end
+
+  @tag :bypass
+  test "returns 404 for city not found", %{conn: conn, bypass: bypass} do
+    Bypass.expect_once(bypass, fn conn ->
+      assert conn.method == "GET"
+      assert conn.request_path == "/weather"
+      assert conn.query_string =~ "appid=test-key&q=foo&units=metric"
+
+      Plug.Conn.resp(conn, 404, ~s"""
+      {
+        "cod": "404",
+        "message": "city not found"
+      }
+      """)
+    end)
+
+    conn = get conn, "/search", %{q: "foo"}
+    assert html_response(conn, 404) =~ "City not found, try to search for something else"
   end
 end

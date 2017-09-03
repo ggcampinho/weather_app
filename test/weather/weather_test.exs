@@ -3,6 +3,7 @@ defmodule WeatherApp.WeatherTest do
 
   alias WeatherApp.Weather
   alias WeatherApp.Weather.Temperature
+  alias WeatherApp.Weather.Errors.NotFound
 
   @tag :bypass
   test "returns the current weather for a geolocation correctly", %{bypass: bypass} do
@@ -26,8 +27,9 @@ defmodule WeatherApp.WeatherTest do
       """)
     end)
 
-    assert Weather.current(latitude: 1, longitude: 2) ==
-      %Weather{temperature: %Temperature{current: 285.514, min: 283.2, max: 286.8}}
+    {:ok, weather} = Weather.current(latitude: 1, longitude: 2)
+
+    assert weather == %Weather{temperature: %Temperature{current: 285.514, min: 283.2, max: 286.8}}
   end
 
   @tag :bypass
@@ -52,7 +54,26 @@ defmodule WeatherApp.WeatherTest do
       """)
     end)
 
-    assert Weather.current(city: "Berlin") ==
-      %Weather{temperature: %Temperature{current: 285.514, min: 283.2, max: 286.8}}
+    {:ok, weather} = Weather.current(city: "Berlin")
+
+    assert weather == %Weather{temperature: %Temperature{current: 285.514, min: 283.2, max: 286.8}}
+  end
+
+  @tag :bypass
+  test "returns error for a city not found", %{bypass: bypass} do
+    Bypass.expect_once(bypass, fn conn ->
+      assert conn.method == "GET"
+      assert conn.request_path == "/weather"
+      assert conn.query_string == "appid=test-key&q=foo&units=metric"
+
+      Plug.Conn.resp(conn, 404, ~s"""
+      {
+        "cod": "404",
+        "message": "city not found"
+      }
+      """)
+    end)
+
+    assert Weather.current(city: "foo") == {:error, %NotFound{message: "city not found"}}
   end
 end

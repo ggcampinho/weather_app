@@ -76,4 +76,24 @@ defmodule WeatherApp.OpenWeatherMapTest do
         }
       }
   end
+
+  @tag :bypass
+  test "returns error for city not found", %{bypass: bypass} do
+    Bypass.expect_once(bypass, fn conn ->
+      assert conn.method == "GET"
+      assert conn.request_path == "/weather"
+      assert conn.query_string == "appid=test-key&q=foo&units=metric"
+
+      Plug.Conn.resp(conn, 404, ~s"""
+      {
+        "cod": "404",
+        "message": "city not found"
+      }
+      """)
+    end)
+
+    {:error, reason} = OpenWeatherMap.current_weather(city: "foo")
+
+    assert reason == "city not found"
+  end
 end
