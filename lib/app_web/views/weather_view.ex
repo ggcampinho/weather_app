@@ -19,7 +19,12 @@ defmodule WeatherAppWeb.WeatherView do
     ["(", latitude, ", ", longitude, ")"]
   end
 
-  def current_temperature(%Weather{temperature: %Temperature{current: current}}) do
+  def current_temperature(%Weather{temperature: %Temperature{current: current}}) when is_integer(current) do
+    temperature = Integer.to_string(current)
+    [remove_trailing_zero(temperature), "˚C"]
+  end
+
+  def current_temperature(%Weather{temperature: %Temperature{current: current}}) when is_float(current) do
     temperature = :erlang.float_to_binary(current, [{:decimals, 1}, :compact])
     [remove_trailing_zero(temperature), "˚C"]
   end

@@ -33,6 +33,12 @@ defmodule WeatherAppWeb.WeatherViewTest do
     assert temperature == "25˚C"
 
     temperature =
+      WeatherView.current_temperature(%Weather{temperature: %Temperature{current: 25}})
+      |> String.Chars.to_string
+
+    assert temperature == "25˚C"
+
+    temperature =
       WeatherView.current_temperature(%Weather{temperature: %Temperature{current: 25.89}})
       |> String.Chars.to_string
 
