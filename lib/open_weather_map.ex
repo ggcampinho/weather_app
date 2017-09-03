@@ -5,6 +5,12 @@ defmodule WeatherApp.OpenWeatherMap do
     |> parse_response
   end
 
+  def current_weather(city: city) do
+    build_url("weather")
+    |> HTTPotion.get(query: build_query(%{q: city}))
+    |> parse_response
+  end
+
   defp env(key) do
     Application.fetch_env!(:app, __MODULE__)
     |> Keyword.fetch!(key)

@@ -13,6 +13,13 @@
 
   <body>
     <div class="container">
+      <header class="header">
+        <%= form_for @conn, weather_path(@conn, :search), [method: :get, as: :search], fn _ -> %>
+          <input type="text" name="q" value="<%= @conn.query_params["q"] %>" />
+          <%= submit "Check weather" %>
+        <% end %>
+      </header>
+
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 

@@ -5,8 +5,8 @@ defmodule WeatherApp.Weather do
   alias WeatherApp.OpenWeatherMap
   alias WeatherApp.Weather.Temperature
 
-  def current(latitude: latitude, longitude: longitude) do
-    OpenWeatherMap.current_weather(latitude: latitude, longitude: longitude)
+  def current(args) do
+    OpenWeatherMap.current_weather(args)
     |> parse_response
   end
 

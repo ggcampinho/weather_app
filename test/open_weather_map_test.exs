@@ -4,7 +4,7 @@ defmodule WeatherApp.OpenWeatherMapTest do
   alias WeatherApp.OpenWeatherMap
 
   @tag :bypass
-  test "returns the current weather correctly", %{bypass: bypass} do
+  test "returns the current weather a geolocation correctly", %{bypass: bypass} do
     Bypass.expect_once(bypass, fn conn ->
       assert conn.method == "GET"
       assert conn.request_path == "/weather"
@@ -26,6 +26,43 @@ defmodule WeatherApp.OpenWeatherMapTest do
     end)
 
     {:ok, body} = OpenWeatherMap.current_weather(latitude: 1, longitude: 2)
+
+    assert body == %{
+        "main" => %{
+          "temp" => 285.514,
+          "pressure" => 1013.75,
+          "humidity" => 100,
+          "temp_min" => 283.2,
+          "temp_max" => 286.8,
+          "sea_level" => 1023.22,
+          "grnd_level" => 1013.75
+        }
+      }
+  end
+
+  @tag :bypass
+  test "returns the current weather for a city correctly", %{bypass: bypass} do
+    Bypass.expect_once(bypass, fn conn ->
+      assert conn.method == "GET"
+      assert conn.request_path == "/weather"
+      assert conn.query_string == "appid=test-key&q=Berlin&units=metric"
+
+      Plug.Conn.resp(conn, 200, ~s"""
+      {
+        "main": {
+          "temp": 285.514,
+          "pressure": 1013.75,
+          "humidity": 100,
+          "temp_min": 283.2,
+          "temp_max": 286.8,
+          "sea_level": 1023.22,
+          "grnd_level": 1013.75
+        }
+      }
+      """)
+    end)
+
+    {:ok, body} = OpenWeatherMap.current_weather(city: "Berlin")
 
     assert body == %{
         "main" => %{

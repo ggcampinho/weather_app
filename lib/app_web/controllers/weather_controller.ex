@@ -8,6 +8,11 @@ defmodule WeatherAppWeb.WeatherController do
     render conn, "show.html", weather: weather
   end
 
+  def search(conn, %{"q" => query}) do
+    weather = Weather.current(city: query)
+    render conn, "show.html", weather: weather
+  end
+
   defp random_latitude do
     ((:rand.uniform() * 180) - 90)
   end
