@@ -1,13 +1,13 @@
 defmodule WeatherApp.OpenWeatherMap do
   def current_weather(latitude: latitude, longitude: longitude) do
     build_url("weather")
-    |> HTTPotion.get(query: build_query(%{latitude: latitude, longitude: longitude}))
+    |> HTTPotion.get(query: build_query(%{lat: latitude, lon: longitude}))
     |> parse_response
   end
 
   defp env(key) do
     Application.fetch_env!(:app, __MODULE__)
-    |> Keyword.get(key)
+    |> Keyword.fetch!(key)
   end
 
   defp build_url(url) do
