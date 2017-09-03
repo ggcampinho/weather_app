@@ -16,7 +16,7 @@ defmodule WeatherAppWeb.Router do
   scope "/", WeatherAppWeb do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
+    get "/", WeatherController, :index
   end
 
   # Other scopes may use custom stacks.

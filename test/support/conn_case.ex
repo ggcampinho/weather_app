@@ -26,13 +26,15 @@ defmodule WeatherAppWeb.ConnCase do
     end
   end
 
-
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(WeatherApp.Repo)
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(WeatherApp.Repo, {:shared, self()})
     end
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+
+    bypass = if tags[:bypass], do: WeatherApp.ApiCase.setup_bypass()
+
+    {:ok, conn: Phoenix.ConnTest.build_conn(), bypass: bypass}
   end
 
 end
