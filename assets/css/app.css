@@ -1,1 +1,25 @@
 /* This file is for your main application css. */
+
+body {
+  text-align: right;
+  padding: 0 15px;
+  background-color: #99ccff;
+  color: #003399;
+}
+
+.search-bar {
+  margin-bottom: 5em;
+}
+
+h1.location {
+  color: #005580;
+}
+
+h3.geolocation {
+  color: #334d4d;
+}
+
+p.temperature {
+  font-size: 20em;
+  font-weight: bold;
+}

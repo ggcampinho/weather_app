@@ -1,2 +1,3 @@
-<%= location(@weather) %>
-<%= @weather.temperature.current %>˚C
+<h1 class="location"><%= location(@weather) %></h1>
+<h3 class="geolocation"><%= geolocation(@weather) %></h1>
+<p class="temperature"><%= current_temperature(@weather) %></p>

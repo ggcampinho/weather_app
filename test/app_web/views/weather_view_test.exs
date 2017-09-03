@@ -3,20 +3,39 @@ defmodule WeatherAppWeb.WeatherViewTest do
 
   alias WeatherAppWeb.WeatherView
   alias WeatherApp.Weather
+  alias WeatherApp.Weather.Temperature
 
-  test "returns location with the weather local" do
-    location =
-      WeatherView.location(%Weather{local: "Berlin", latitude: 52.52, longitude: 13.37})
-      |> String.Chars.to_string
+  test "returns location" do
+    assert WeatherView.location(%Weather{local: "Berlin", latitude: 52.52, longitude: 13.37}) == "Berlin"
 
-    assert location == "Berlin (52.52, 13.37)"
+    assert WeatherView.location(%Weather{local: "", latitude: 52.52, longitude: 13.37}) == "Unknown location"
   end
 
-  test "returns location without the weather local" do
-    location =
-      WeatherView.location(%Weather{local: "", latitude: 52.52, longitude: 13.37})
+  test "returns geolocation" do
+    geolocation =
+      WeatherView.geolocation(%Weather{local: "Berlin", latitude: 52.52, longitude: 13.37})
       |> String.Chars.to_string
 
-    assert location == "Location (52.52, 13.37)"
+    assert geolocation == "(52.52, 13.37)"
+  end
+
+  test "returns current temperature rounded" do
+    temperature =
+      WeatherView.current_temperature(%Weather{temperature: %Temperature{current: 25.52}})
+      |> String.Chars.to_string
+
+    assert temperature == "25.5˚C"
+
+    temperature =
+      WeatherView.current_temperature(%Weather{temperature: %Temperature{current: 25.0}})
+      |> String.Chars.to_string
+
+    assert temperature == "25˚C"
+
+    temperature =
+      WeatherView.current_temperature(%Weather{temperature: %Temperature{current: 25.89}})
+      |> String.Chars.to_string
+
+    assert temperature == "25.9˚C"
   end
 end

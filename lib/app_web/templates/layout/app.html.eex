@@ -12,22 +12,21 @@
   </head>
 
   <body>
-    <div class="container">
-      <header class="header">
-        <%= form_for @conn, weather_path(@conn, :search), [method: :get, as: :search], fn _ -> %>
-          <input type="text" name="q" value="<%= @conn.query_params["q"] %>" />
-          <%= submit "Check weather" %>
-        <% end %>
-      </header>
+    <div class="search-bar">
+      <%= form_for @conn, weather_path(@conn, :search), [method: :get, as: :search, class: "form-inline"], fn _ -> %>
+        <label class="sr-only" for="q">Name</label>
+        <input type="text" name="q" value="<%= @conn.query_params["q"] %>" placeholder="Search by city..." class="form-control mb-4 mr-sm-4 mb-sm-0" />
+        <%= submit "Check weather", class: "btn btn-primary" %>
+      <% end %>
+    </div>
 
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
+    <main role="main">
+      <%= render @view_module, @view_template, assigns %>
+    </main>
 
-    </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
