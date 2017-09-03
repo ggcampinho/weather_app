@@ -1,11 +1,18 @@
 # WeatherApp
 
-To start your Phoenix server:
+To start your Phoenix server for the first time:
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
+  * Spin a local server `docker-compose up -d web`
+  * Open a console in the server `docker-compose run web bash`
+  * Install dependencies with `mix deps.get` in the console
+  * Create and migrate your database with `mix ecto.create && mix ecto.migrate` in the console
+  * Install Node.js dependencies with `cd assets && npm install` in the console
+  * Restart Phoenix endpoint with `docker-compose restart web`
+  * Attach the log `docker attach weatherapp_web_1 `
+
+If you have already setup your server:
+
+  * Run `docker-compose up web`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
