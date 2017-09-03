@@ -1,14 +1,26 @@
 defmodule WeatherApp.OpenWeatherMap do
   def current_weather(latitude: latitude, longitude: longitude) do
     build_url("weather")
-    |> HTTPotion.get(query: build_query(%{lat: latitude, lon: longitude}))
-    |> parse_response
+    |> get(query: build_query(%{lat: latitude, lon: longitude}))
   end
 
   def current_weather(city: city) do
     build_url("weather")
-    |> HTTPotion.get(query: build_query(%{q: city}))
-    |> parse_response
+    |> get(query: build_query(%{q: city}))
+  end
+
+  defp get(url, query: query) do
+    get(url, query: query, retries: 3)
+  end
+
+  defp get(url, query: query, retries: retries) do
+    with response <- HTTPotion.get(url, query: query),
+         %HTTPotion.Response{status_code: status_code} when status_code < 500 <- response do
+      parse_response(response)
+    else
+      _ when retries > 0 -> get(url, query: query, retries: retries - 1)
+      error -> raise "Open Weather Map error: #{error}"
+    end
   end
 
   defp env(key) do
@@ -26,11 +38,11 @@ defmodule WeatherApp.OpenWeatherMap do
     |> Map.put(:units, :metric)
   end
 
-  defp parse_response(%{body: body, status_code: 200}) do
+  defp parse_response(%HTTPotion.Response{body: body, status_code: 200}) do
     {:ok, :jsx.decode(body, [:return_maps])}
   end
 
-  defp parse_response(%{body: body, status_code: 404}) do
+  defp parse_response(%HTTPotion.Response{body: body, status_code: 404}) do
     parsed_body = :jsx.decode(body, [:return_maps])
 
     {:error, Map.get(parsed_body, "message")}

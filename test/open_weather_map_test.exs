@@ -96,4 +96,20 @@ defmodule WeatherApp.OpenWeatherMapTest do
 
     assert reason == "city not found"
   end
+
+  @tag :bypass
+  test "recovers from server errors", %{bypass: bypass} do
+    {:ok, agent} = Agent.start_link(fn ->
+      [{503, ""}, {200, ~s({"foo": "bar"})}]
+    end)
+
+    Bypass.expect(bypass, fn conn ->
+      {code, body} = Agent.get_and_update(agent, fn [head | tail] -> {head, tail} end)
+      Plug.Conn.resp(conn, code, body)
+    end)
+
+    assert OpenWeatherMap.current_weather(city: "Berlin") == {:ok, %{"foo" => "bar"}}
+
+    Agent.stop(agent)
+  end
 end
