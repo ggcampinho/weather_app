@@ -22,6 +22,11 @@ defmodule WeatherApp.WeatherTest do
           "temp_max": 286.8,
           "sea_level": 1023.22,
           "grnd_level": 1013.75
+        },
+        "name": "Berlin",
+        "coord": {
+          "lat": 52.52,
+          "lon": 13.37
         }
       }
       """)
@@ -29,7 +34,12 @@ defmodule WeatherApp.WeatherTest do
 
     {:ok, weather} = Weather.current(latitude: 1, longitude: 2)
 
-    assert weather == %Weather{temperature: %Temperature{current: 285.514, min: 283.2, max: 286.8}}
+    assert weather == %Weather{
+      local: "Berlin",
+      latitude: 52.52,
+      longitude: 13.37,
+      temperature: %Temperature{current: 285.514, min: 283.2, max: 286.8}
+    }
   end
 
   @tag :bypass
@@ -49,6 +59,11 @@ defmodule WeatherApp.WeatherTest do
           "temp_max": 286.8,
           "sea_level": 1023.22,
           "grnd_level": 1013.75
+        },
+        "name": "Berlin",
+        "coord": {
+          "lat": 52.52,
+          "lon": 13.37
         }
       }
       """)
@@ -56,7 +71,12 @@ defmodule WeatherApp.WeatherTest do
 
     {:ok, weather} = Weather.current(city: "Berlin")
 
-    assert weather == %Weather{temperature: %Temperature{current: 285.514, min: 283.2, max: 286.8}}
+    assert weather == %Weather{
+      local: "Berlin",
+      latitude: 52.52,
+      longitude: 13.37,
+      temperature: %Temperature{current: 285.514, min: 283.2, max: 286.8}
+    }
   end
 
   @tag :bypass

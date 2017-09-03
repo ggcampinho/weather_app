@@ -1,1 +1,2 @@
+<%= location(@weather) %>
 <%= @weather.temperature.current %>˚C

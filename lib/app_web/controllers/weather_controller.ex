@@ -11,6 +11,10 @@ defmodule WeatherAppWeb.WeatherController do
     end
   end
 
+  def search(conn, params = %{"q" => ""}) do
+    index(conn, params)
+  end
+
   def search(conn, %{"q" => query}) do
     with {:ok, weather} <- Weather.current(city: query) do
       render conn, "show.html", weather: weather
